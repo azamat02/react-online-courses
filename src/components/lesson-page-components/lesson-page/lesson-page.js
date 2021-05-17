@@ -9,10 +9,13 @@ import ReactPlayer from "react-player";
 import { Fragment, useEffect, useRef, useState } from 'react'
 import { ChevronDownIcon } from '@heroicons/react/solid'
 import ModuleItem from "../../course-page-components/module-item";
+import Modal from "../../tools/modal";
 
 export default class LessonPage extends Component {
     constructor(props) {
         super(props);
+
+        this.isAutorized = false
 
         this.state = {
             id: props.id,
@@ -52,6 +55,10 @@ export default class LessonPage extends Component {
     }
 
     render() {
+        if (!this.isAuthorized) {
+            return <Modal info="You are not authorized. Please sign in/up first" buttonLink={`/`} title="Error" open={true}/>
+        }
+
         let {lesson, modules} = this.state
         if (!lesson || !modules) {
             return <Spinner/>
@@ -65,9 +72,9 @@ export default class LessonPage extends Component {
             lessonContent} = lesson
 
         // Set video or lecture container
-        let videoContainer = (<div className="video-container w-full h-full bg-gray-700">
-                                <ReactPlayer url='https://www.youtube.com/watch?v=XIFDKTiiG5s' controls width="100%" height="100%"/>
-                            </div>)
+        let videoContainer = lessonLink !== "no data" ? (<div className="video-container w-full h-full bg-gray-700">
+                                                            <ReactPlayer url={lessonLink} controls width="100%" height="100%"/>
+                                                        </div>) : (<h1 className="text-2xl font-bold text-red-500 border-l-4 pl-4 border-red-500 bg-red-200 py-3" >No video link added yet</h1>)
 
         let lectureContainer = (<div className="content mt-5 mb-32">
                                     <h1 className="text-3xl font-bold border-l-4 border-gray-900 p-2 bg-indigo-100 text-gray-900">Lecture: {lessonTitle}</h1>

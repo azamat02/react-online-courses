@@ -4,10 +4,13 @@ import Spinner from "../../main-page-components/spinner";
 import ListBox from "../../tools/listbox";
 import PaymentForm from "../../tools/payment-form";
 import {BookOpenIcon, CashIcon, LockClosedIcon, UserIcon} from "@heroicons/react/outline";
+import Modal from "../../tools/modal";
 
 export default class PaymentsPage extends Component {
     constructor(props) {
         super(props);
+
+        this.isAuthorized = false
 
         this.state = {
             courseId: props.courseId,
@@ -26,6 +29,10 @@ export default class PaymentsPage extends Component {
     }
 
     render() {
+        if (!this.isAuthorized) {
+            return <Modal info="You are not authorized. Please sign in/up first" title="Error" open={true}/>
+        }
+
         let {course} = this.state
         if (!course) {
             return <Spinner/>
@@ -39,6 +46,7 @@ export default class PaymentsPage extends Component {
             {id: 5, name: "Turkey"},
             {id: 6, name: "France"},
         ]
+
 
         return (
             <div className="container mt-10 grid grid-cols-3 gap-5">
